@@ -5,11 +5,11 @@ public class TestAnimationCube {
 	int posX;
 	int posY;
 	
+	
 	boolean special;
 	public TestAnimationCube(int x,int y) {
 		this.posX = x;
 		this.posY = y;
-
 	}
 	
 	public TestAnimationCube setType(int i){

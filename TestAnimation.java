@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,7 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicSplitPaneUI.KeyboardDownRightHandler;
 
-public class TestAnimation extends Applet implements Runnable, KeyListener {
+public class TestAnimation extends Applet implements Runnable, KeyListener, MouseListener{
 	
 	ArrayList<TestAnimationCube> list = new ArrayList<TestAnimationCube>();
 	Random rr = new Random();
@@ -27,10 +29,15 @@ public class TestAnimation extends Applet implements Runnable, KeyListener {
 	boolean a;
 	boolean s;
 	boolean d;
+	boolean mouse;
+	TestLaser laser;
+
 
 	@Override
 	public void init() {
 		this.addKeyListener(this);
+		this.addMouseListener(this);
+		laser = new TestLaser(this);
 		list.add(new TestAnimationCube(0,640));
 		this.setSize(1000, 700);
 		new Thread(this).start();
@@ -65,6 +72,7 @@ public class TestAnimation extends Applet implements Runnable, KeyListener {
 		g.drawString("posX: "+posX+" x: "+x,10,10);
 		g.drawString("posY: "+posY+" y: "+posY,10,20);
 		g.drawString(debug+"",10,30);
+		laser.drawLaser(g);
 		
 		for(int i = 0; i<list.size(); i++){
 			TestAnimationCube cube = list.get(i);
@@ -96,10 +104,12 @@ public class TestAnimation extends Applet implements Runnable, KeyListener {
 	public void run() {
 		while(true){
 			tick++;
+			
 			this.repaint();
 			if(size>this.getWidth() || size>this.getHeight()){
 				endGame();
 			}
+			if(mouse)		laser.shootLaser(this.getMousePosition().x, this.getMousePosition().y, this.posX);		
 			oldPosY = posY;
 			posY+=(speedY*multiplierY);
 			if(x+size>this.getWidth())
@@ -264,6 +274,32 @@ public class TestAnimation extends Applet implements Runnable, KeyListener {
 			d = false;
 
 		}		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		mouse = true;
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		mouse = false;
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 
